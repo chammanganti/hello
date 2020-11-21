@@ -1,8 +1,9 @@
+PROJECT := hello
 KUBECONFIG := .circleci/kube
-REPOSITORY := chammanganti/hello
+REPOSITORY := chammanganti/$(PROJECT)
 TAG := $(shell git log -1 --pretty=format:%h)
 VALUES := values.yaml
-NAMESPACE := project-hello
+NAMESPACE := project-$(PROJECT)
 
 all: help
 
@@ -19,4 +20,4 @@ push:
 	docker push $(REPOSITORY):$(TAG)
 
 deploy:
-	helm --kubeconfig=${KUBECONFIG} upgrade --install -f chart/$(VALUES) -n $(NAMESPACE) --set image.tag=$(TAG) hello chart
+	helm --kubeconfig=${KUBECONFIG} upgrade --install -f chart/$(VALUES) -n $(NAMESPACE) --set image.tag=$(TAG) $(PROJECT) chart
