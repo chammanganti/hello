@@ -5,7 +5,7 @@
 global:
   apiVersion: v1
 
-replicaCount: 3
+replicaCount: 1
 
 image:
   repository: chammanganti/hello
