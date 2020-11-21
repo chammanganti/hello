@@ -23,6 +23,13 @@ spec:
           ports:
             - containerPort: {{ .containerPort }}
         {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            limits:
+              cpu: {{ .limits.cpu }}
+            requests:
+              cpu: {{ .requests.cpu }}
+          {{- end }}
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- range .Values.imagePullSecrets }}
