@@ -8,14 +8,13 @@ global:
 replicaCount: 1
 
 image:
-  repository: chammanganti/hello
+  repository: localhost:32000/hello
   containerPort: 80
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: 0.0.1
 
-imagePullSecrets:
-  - docker-hub-secret
+imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
@@ -48,17 +47,18 @@ service:
 
 ingress:
   enabled: true
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-chammanganti-com
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: staging.hello.chammanganti.com
+    - host: hello.microk8s.earth
       paths:
         - type: Prefix
           path: /
   tls:
-    - secretName: chammanganti-com-tls
+    - secretName: microk8s-earth-tls
       hosts:
-        - staging.hello.chammanganti.com
+        - hello.microk8s.earth
 
 resources: 
   limits:
