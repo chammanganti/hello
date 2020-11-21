@@ -24,7 +24,16 @@ jobs:
       - run: sed -i -e "s,\$CERTIFICATE_AUTHORITY_DATA,${CERTIFICATE_AUTHORITY_DATA},g" .circleci/kube
       - run: sed -i -e "s,\$CLIENT_CERTIFICATE_DATA,${CLIENT_CERTIFICATE_DATA},g" .circleci/kube
       - run: sed -i -e "s,\$CLIENT_KEY_DATA,${CLIENT_KEY_DATA},g" .circleci/kube
-      - run: make deploy
+      - when:
+          condition:
+            equal: [ master, << pipeline.git.branch >> ]
+          steps:
+            - run: make deploy
+      - when:
+          condition:
+            equal: [ staging, << pipeline.git.branch >> ]
+          steps:
+            - run: make deploy VALUES=values.staging.yaml NAMESPACE=project-hello-staging
 
 workflows:
   version: 2
