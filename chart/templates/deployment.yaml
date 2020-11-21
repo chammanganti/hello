@@ -1,0 +1,31 @@
+apiVersion: apps/{{ .Values.global.apiVersion }}
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deployment
+  labels:
+{{ include "hello.labels" . | indent 4 }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+{{ include "hello.labels" . | indent 6 }}
+  template:
+    metadata:
+      labels:
+{{ include "hello.labels" . | indent 8 }}
+    spec:
+      containers:
+        {{- with .Values.image }}
+        - name: {{ $.Release.Name }}
+          image: {{ .repository }}:{{ .tag }}
+          imagePullPolicy: {{ .pullPolicy }}
+          ports:
+            - containerPort: {{ .containerPort }}
+        {{- end }}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.imagePullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- end }}

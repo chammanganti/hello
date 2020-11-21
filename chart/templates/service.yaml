@@ -1,0 +1,16 @@
+apiVersion: {{ .Values.global.apiVersion }}
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-service
+  labels:
+{{ include "hello.labels" . | indent 4 }}
+
+spec:
+  selector:
+{{ include "hello.labels" . | indent 4 }}
+  {{- with .Values.service }}
+  ports:
+    - port: {{ .port }}
+      targetPort: {{ .targetPort }}
+  type: {{ .type }}
+  {{- end }}
