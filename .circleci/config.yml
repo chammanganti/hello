@@ -20,10 +20,11 @@ jobs:
       - run: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
       - run: chmod 700 get_helm.sh
       - run: ./get_helm.sh
-      - run: sed -i -e "s,\$K8S_SERVER,${K8S_SERVER},g" .circleci/kube
-      - run: sed -i -e "s,\$CERTIFICATE_AUTHORITY_DATA,${CERTIFICATE_AUTHORITY_DATA},g" .circleci/kube
-      - run: sed -i -e "s,\$CLIENT_CERTIFICATE_DATA,${CLIENT_CERTIFICATE_DATA},g" .circleci/kube
-      - run: sed -i -e "s,\$CLIENT_KEY_DATA,${CLIENT_KEY_DATA},g" .circleci/kube
+      - run: |
+          sed -i -e "s,\$K8S_SERVER,${K8S_SERVER},g" \
+                    -e "s,\$CERTIFICATE_AUTHORITY_DATA,${CERTIFICATE_AUTHORITY_DATA},g" \
+                    -e "s,\$CLIENT_CERTIFICATE_DATA,${CLIENT_CERTIFICATE_DATA},g" \
+                    -e "s,\$CLIENT_KEY_DATA,${CLIENT_KEY_DATA},g" .circleci/kube
       - when:
           condition:
             equal: [ master, << pipeline.git.branch >> ]
