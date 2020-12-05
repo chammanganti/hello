@@ -48,15 +48,13 @@ service:
 
 ingress:
   enabled: true
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-chammanganti-com
   hosts:
     - host: staging.hello.chammanganti.com
       paths:
         - type: Prefix
           path: /
   tls:
-    - secretName: chammanganti-com-tls
+    - secretName: chammanganti.com-tls
       hosts:
         - staging.hello.chammanganti.com
 
