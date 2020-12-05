@@ -49,14 +49,14 @@ service:
 ingress:
   enabled: true
   hosts:
-    - host: staging.hello.chammanganti.com
+    - host: hello-staging.chammanganti.com
       paths:
         - type: Prefix
           path: /
   tls:
     - secretName: chammanganti.com-tls
       hosts:
-        - staging.hello.chammanganti.com
+        - hello-staging.chammanganti.com
 
 resources: 
   limits:
