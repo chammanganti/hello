@@ -1,0 +1,32 @@
+build:
+  stage: build
+  image:
+    name: registry.chammanganti.com:8443/tools/kaniko:debug
+    entrypoint: [""]
+  tags:
+    - alpine
+  script:
+    - echo "{\"auths\":{\"$REGISTRY\":{\"auth\":\"$REGISTRY_AUTH\"}},\"HttpHeaders\":{\"User-Agent\":\"Docker-Client/19.03.13 (linux)\"}}" > /kaniko/.docker/config.json
+    - cat /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $REGISTRY/projects/profile:$CI_COMMIT_SHORT_SHA --skip-tls-verify
+
+deploy:
+  stage: deploy
+  tags:
+    - alpine
+  script:
+    - kubectl config set-cluster k8s --server="$K8S_SERVER"
+    - kubectl config set clusters.k8s.certificate-authority-data $K8S_CA_DATA
+    - kubectl config set-credentials gitlab --token="$K8S_USER_TOKEN"
+    - kubectl config set-context default --cluster=k8s --user=gitlab
+    - kubectl config use-context default
+    - >
+      if [ "$CI_COMMIT_BRANCH" == "master" ]; then
+        helm -n prj-profile upgrade --install --set image.tag=$CI_COMMIT_SHORT_SHA hello chart
+      elif [ "$CI_COMMIT_BRANCH" == "staging" ]; then
+        helm -n prj-profile-staging upgrade --install -f chart/values.staging.yaml --set image.tag=$CI_COMMIT_SHORT_SHA hello chart
+      fi
+
+stages:
+  - build
+  - deploy
