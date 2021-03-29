@@ -8,14 +8,14 @@ global:
 replicaCount: 1
 
 image:
-  repository: chammanganti/hello
+  repository: registry.chammanganti.com:8443/projects/hello
   containerPort: 80
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: 0.0.1
 
 imagePullSecrets:
-  - docker-hub-secret
+  - registry-secret
 nameOverride: ""
 fullnameOverride: ""
 
